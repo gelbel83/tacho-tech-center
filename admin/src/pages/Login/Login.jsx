@@ -1,4 +1,5 @@
 import { useState, useContext } from 'preact/hooks';
+import { route } from 'preact-router';
 import { API } from '../../api.js';
 import { UserContext } from "../../context/UserContext.jsx";
 
@@ -29,6 +30,7 @@ export default function Login() {
 
                 if (result.ok) {
                     setCurrentUser(data.user);
+                    route('/active');
                 } else {
                     setError(data.error);
                 }

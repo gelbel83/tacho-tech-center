@@ -9,13 +9,11 @@ function restoreUser() {
     catch { return null; } 
 }
 
-export function App() {
+export default function App() {
     const [currentUser, setCurrentUser] = useState(restoreUser());
 
     useEffect(() => {
-        if (currentUser) {
-            localStorage.setItem('user', JSON.stringify(currentUser));
-        }
+        if (currentUser) localStorage.setItem('user', JSON.stringify(currentUser));
         else localStorage.removeItem('user');
     }, [currentUser]);
 
