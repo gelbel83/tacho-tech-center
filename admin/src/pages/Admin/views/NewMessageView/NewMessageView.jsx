@@ -1,6 +1,102 @@
 import '../../../../styles/global.css';
+import { useRef } from 'preact/hooks';
+import { useContext } from 'preact/hooks';
+import { SelectedFileContext } from '../../../../context/SelectedFileContext.jsx';
 
 export default function NewMessageView() {
+    console.log(useContext(SelectedFileContext));
+
+    const { selectedFile, setSelectedFile } = useContext(SelectedFileContext);
+
+    const wrapperRef = useRef(null);
+    const toggle = () => {
+        wrapperRef.current.classList.contains('hidden') ? 
+        wrapperRef.current.classList.remove('hidden') : 
+        wrapperRef.current.classList.add('hidden');
+    }
+
+    const zoneRef = useRef(null);
+    const inputRef = useRef(null);
+    const removeBtnRef = useRef(null);
+
+    const zoneClick = (e) => {
+        const zone = zoneRef.current;
+        const removeBtn = removeBtnRef.current;
+        const input = inputRef.current;
+
+        if (removeBtn && removeBtn.contains(e.target)) return;
+        input.click();
+    }
+
+    const inputChange = () => {
+        if (inputRef.current.files[0]) {
+            handleFile(inputRef.current.files[0]);
+        }
+    }
+
+    const zoneDragOver = (e) => {
+        e.preventDefault();
+        zoneRef.current.classList.add('drag-over');
+    }
+
+    const zoneDragLeave = () => {
+        zoneRef.current.classList.remove('drag-over');
+    }
+
+    const zoneDrop = (e) => {
+        e.preventDefault();
+        zoneRef.current.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (file) handleFile(file);
+    }
+
+    const removeClick = (e) => {
+        e.stopPropagation();
+        clearUploadPreview();
+    }
+
+    function handleFile(file) {
+        const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        if (!allowed.includes(file.type)) {
+            alert('Niedozwolony format. Użyj JPG, PNG, WebP lub GIF.');
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Plik jest zbyt duży. Maksymalny rozmiar to 5 MB.');
+            return;
+        }
+        setSelectedFile(file);
+        const url = URL.createObjectURL(file);
+        showUploadPreview(url);
+    }
+
+    const placehodlerRef = useRef(null);
+    const previewRef = useRef(null);
+
+    function showUploadPreview(src) {
+        if (placehodlerRef.current) {
+            placehodlerRef.current.classList.add('hidden');
+        }
+
+        if (previewRef.current) {
+            previewRef.current.src = src;
+            previewRef.current.classList.remove('hidden');
+        }
+
+        if (removeBtnRef.current) {
+            removeBtnRef.current.classList.remove('hidden');
+        }
+    }
+
+    function clearUploadPreview() {
+        setSelectedFile(null);
+        document.getElementById('upload-placeholder').classList.remove('hidden');
+        const preview = document.getElementById('upload-preview');
+        preview.src = '';
+        preview.classList.add('hidden');
+        document.getElementById('upload-remove').classList.add('hidden');
+        document.getElementById('msg-image').value = '';
+    }
     return (
 <main class="view">
     <div class="view-header">
@@ -38,21 +134,21 @@ export default function NewMessageView() {
                         <div class="field-group">
                             <label class="field-label">Grafika (miniaturka)</label>
                             <div style="margin-bottom:10px;">
-                                <label><input type="checkbox" id="msg-has-image" class="check-Image" />Dodaj zdjęcie</label>
+                                <label><input type="checkbox" id="msg-has-image" class="check-Image" onClick={toggle} onChange={inputChange} /> Dodaj zdjęcie</label>
                             </div>
 
-                            <div id="image-upload-wrapper" class="hidden">
-                                <div class="upload-zone" id="upload-zone">
-                                    <input type="file" id="msg-image" accept="image/jpeg,image/png,image/webp,image/gif" hidden/>
-                                    <div class="upload-placeholder" id="upload-placeholder">
+                            <div id="image-upload-wrapper" class="hidden" ref={wrapperRef}>
+                                <div class="upload-zone" id="upload-zone" ref={zoneRef} onClick={zoneClick} onDragOver={zoneDragOver} onDragLeave={zoneDragLeave} onDrop={zoneDrop}>
+                                    <input type="file" id="msg-image" accept="image/jpeg,image/png,image/webp,image/gif" ref={inputRef} hidden/>
+                                    <div class="upload-placeholder" id="upload-placeholder" ref={placehodlerRef}>
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="upload-icon">
                                             <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                         </svg>
                                         <span class="upload-label">Kliknij lub przeciągnij plik</span>
                                         <span class="upload-hint">JPG, PNG, WebP · Max 5 MB</span>
                                     </div>
-                                    <img id="upload-preview" class="upload-preview hidden" alt="Podgląd grafiki"/>
-                                    <button type="button" id="upload-remove" class="upload-remove hidden">✕</button>
+                                    <img id="upload-preview" class="upload-preview hidden" alt="Podgląd grafiki" ref={previewRef}/>
+                                    <button type="button" id="upload-remove" class="upload-remove hidden" ref={removeBtnRef} onClick={removeClick}>✕</button>
                                 </div>
                             </div>
                         </div>

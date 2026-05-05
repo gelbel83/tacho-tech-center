@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import { UserContext } from "./context/UserContext";
+import { SelectedFileContext } from './context/SelectedFileContext.jsx';
 
 import Login from './pages/Login/Login.jsx';
 import Admin from './pages/Admin/Admin.jsx';
@@ -11,7 +12,8 @@ function restoreUser() {
 
 export default function App() {
     const [currentUser, setCurrentUser] = useState(restoreUser());
-
+    const [selectedFile, setSelectedFile] = useState(null);
+    
     useEffect(() => {
         if (currentUser) localStorage.setItem('user', JSON.stringify(currentUser));
         else localStorage.removeItem('user');
@@ -19,7 +21,9 @@ export default function App() {
 
     return (
         <UserContext.Provider value={{ currentUser, setCurrentUser }}>
-            { !currentUser ? <Login /> : <Admin /> }
+            <SelectedFileContext.Provider value={{ selectedFile, setSelectedFile }}>
+                { !currentUser ? <Login /> : <Admin /> }
+            </SelectedFileContext.Provider>
         </UserContext.Provider>
     );
 }

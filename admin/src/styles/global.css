@@ -355,3 +355,4 @@ html, body {
 .toggle-switch input:checked + .toggle-track { background: var(--red); }
 .toggle-switch input:checked + .toggle-track::after { transform: translateX(18px); }
 
+.hidden { display: none !important; }
