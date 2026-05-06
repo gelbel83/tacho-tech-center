@@ -97,6 +97,7 @@ export default function NewMessageView() {
         document.getElementById('upload-remove').classList.add('hidden');
         document.getElementById('msg-image').value = '';
     }
+    
     return (
 <main class="view">
     <div class="view-header">

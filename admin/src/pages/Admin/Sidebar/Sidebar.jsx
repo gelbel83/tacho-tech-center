@@ -12,6 +12,7 @@ export default function Sidebar() {
     const activeIcon = <i className="fa-solid fa-circle-check"></i>;
     const archivedIcon = <i className="fa-solid fa-box-archive"></i>;
     const generateKeysIcon = <i className="fa-solid fa-key"></i>;
+    const supportPanelIcon = <i class="fa-solid fa-upload"></i>;
     const newMessageIcon = <i className="fa-solid fa-plus"></i>;
 
     return (
@@ -21,6 +22,7 @@ export default function Sidebar() {
             <SidebarItem label={'Aktywne'} icon={activeIcon} path={'/active'} />
             <SidebarItem label={'Archiwum'} icon={archivedIcon} path={'/archived'} />
             <SidebarItem label={'Generator kodów'} icon={generateKeysIcon} path={'/generate-keys'} />
+            <SidebarItem label={'Panel supportu'} icon={supportPanelIcon} path={'/support'} />
             <SidebarItem label={'Nowy komunikat'} icon={newMessageIcon} path={'/new-message'} />
 
             <SidebarFooter />
