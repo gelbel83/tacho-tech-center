@@ -12,7 +12,7 @@ export default function Admin() {
         <Sidebar />
 
         <Router>
-            <ActiveView path="/active" default />
+            <ActiveView path="/active" />
             <ArchivedView path="/archived" />
             <GenerateKeysView path="/generate-keys" />
             <NewMessageView path="/new-message" />
