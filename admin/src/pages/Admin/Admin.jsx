@@ -5,6 +5,7 @@ import ActiveView from './views/ActiveView/ActiveView.jsx';
 import ArchivedView from './views/ArchivedView/ArchivedView.jsx';
 import GenerateKeysView from './views/GenerateKeysView/GenerateKeysView.jsx';
 import NewMessageView from './views/NewMessageView/NewMessageView.jsx';
+import SupportPanelView from './views/SupportPanelView/SupportPanelView.jsx';
 
 export default function Admin() {
   return (
@@ -15,6 +16,7 @@ export default function Admin() {
             <ActiveView path="/active" />
             <ArchivedView path="/archived" />
             <GenerateKeysView path="/generate-keys" />
+            <SupportPanelView path="/support" />
             <NewMessageView path="/new-message" />
         </Router>
     </>

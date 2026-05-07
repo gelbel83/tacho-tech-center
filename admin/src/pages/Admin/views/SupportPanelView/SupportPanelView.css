@@ -1,0 +1,66 @@
+.info-cards{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 20px;
+}
+
+.upload-info-card{
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--gray-100);
+    padding: 20px;
+    line-height: 20px;
+    flex: 1;
+}
+
+.report-list-card{
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--gray-100);
+    line-height: 20px;
+    margin-top: 20px;
+}
+
+.report-list-header{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 20px;
+    gap: 16px;
+}
+
+.report-table{
+    width: 100%;
+    & tr{
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        & td, th{
+            width: 200px;
+            flex: 1;
+            padding: 10px;
+        }
+        & th {
+            font-weight: 100;
+            background-color: rgb(245, 245, 245);
+        }
+    }
+}
+
+.report-list-none{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 200px;
+}
+
+.report-search{
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--gray-100);
+    padding: 20px;
+    height: 30px;
+}

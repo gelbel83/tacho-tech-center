@@ -13,6 +13,7 @@ export default function Sidebar() {
     const activeIcon = <i className="fa-solid fa-circle-check"></i>;
     const archivedIcon = <i className="fa-solid fa-box-archive"></i>;
     const generateKeysIcon = <i className="fa-solid fa-key"></i>;
+    const supportPanelIcon = <i class="fa-solid fa-upload"></i>;
     const newMessageIcon = <i className="fa-solid fa-plus"></i>;
     const inboxIcon = <i class="fa-solid fa-inbox"></i>;
 
@@ -21,13 +22,14 @@ export default function Sidebar() {
             <SidebarLogo />
 
             <ExpandableSidebarItem label={'Informator'} icon={inboxIcon} >
-                <SidebarItem label={'Aktywne'} icon={activeIcon} path={'/active'} />
+                <SidebarItem label={'Aktywne'} icon={activeIcon} path={'/active'} badge={<span class="nav-badge">0</span>}/>
                 <SidebarItem label={'Archiwum'} icon={archivedIcon} path={'/archived'} />
                 <SidebarItem label={'Nowy komunikat'} icon={newMessageIcon} path={'/new-message'} />
             </ExpandableSidebarItem>
             
             <SidebarItem label={'Generator kodów'} icon={generateKeysIcon} path={'/generate-keys'} />
-            
+            <SidebarItem label={'Panel supportu'} icon={supportPanelIcon} path={'/support'} />
+
             <SidebarFooter />
         </aside>
     )
