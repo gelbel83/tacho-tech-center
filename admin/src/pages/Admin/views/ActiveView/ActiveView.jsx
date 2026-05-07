@@ -62,7 +62,7 @@ export default function ActiveView() {
                 )}
 
                 {!loading && !error && messages.map(msg => (
-                    <MessageCard key={msg.id} data={msg} filter="active" />
+                    <MessageCard headline={msg.headline} display_frequency={msg.display_frequency} display_time={msg.display_time} expires={msg.expires_at} is_active={msg.is_active} id={msg.id}/>
                 ))}
             </div>
         </main>
