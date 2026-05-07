@@ -47,8 +47,7 @@ export default function Login() {
             <div className="login-wrapper">
                 <div className="login-card">
                     <div className="login-logo">
-                        <div className="logo-mark">IT</div>
-                        <span className="logo-label">Info Tachospeed</span>
+                        <img className="logo" src="../../../logo/logo-normal.png" alt="logo" />
                     </div>
 
                     <h1 className="login-title">Panel Administracyjny</h1>

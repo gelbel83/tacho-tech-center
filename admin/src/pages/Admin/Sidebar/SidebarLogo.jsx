@@ -1,8 +1,7 @@
 export default function SidebarLogo() {
     return (
         <div className="sidebar-logo">
-            <div className="logo-mark sm">TSC</div>
-            <span className="logo-label">Tachospeed Support Center</span>
+            <img className="logo" src="../../../../logo/logo-normal.png" alt="logo" />
         </div>
     );
 }
