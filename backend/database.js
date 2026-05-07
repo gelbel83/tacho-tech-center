@@ -32,6 +32,7 @@ function initSchema() {
       is_active INTEGER NOT NULL DEFAULT 1,
       display_duration_days INTEGER NOT NULL DEFAULT 7,
       display_frequency TEXT NOT NULL DEFAULT '1x_daily',
+      display_interval TEXT NOT NULL DEFAULT '01:00',
       display_time TEXT NOT NULL DEFAULT '10:00',
       show_push INTEGER NOT NULL DEFAULT 1,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
