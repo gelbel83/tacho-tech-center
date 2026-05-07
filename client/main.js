@@ -3,11 +3,15 @@ const { app, BrowserWindow, Tray, Menu, nativeImage, shell,
 const path = require('path');
 const fs   = require('fs');
 
+const ICON_PATH = app.isPackaged
+  ? path.join(process.resourcesPath, 'assets', 'sygnet-red.ico')
+  : path.join(__dirname, 'assets', 'sygnet-red.ico');
+
 // ─── Konfiguracja ─────────────────────────────────────────────────────────
 const API_BASE       = 'http://localhost:3000/api';
 const CHECK_INTERVAL = 15 * 60 * 1000; // Fallback: co 15 minut
 const STORE_PATH     = path.join(app.getPath('userData'), 'state.json');
-const APP_NAME       = 'Info Tachospeed';
+const APP_NAME       = 'Tachospeed Support Center';
 const AUTO_START     = true; // Uruchamiaj automatycznie z Windows
 
 let tray            = null;
@@ -81,7 +85,7 @@ app.on('before-quit', () => { isQuitting = true; });
 // ─── Tray ─────────────────────────────────────────────────────────────────
 function createTray() {
   // Ikona tray – generujemy prostą ikonę SVG konwertując na nativeImage
-  const iconPath = path.join(__dirname, 'assets', 'tray-icon.png');
+  const iconPath = ICON_PATH;
 
   let icon;
   if (fs.existsSync(iconPath)) {
@@ -140,10 +144,12 @@ function openMessagesWindow(startView = 'list') {
   }
 
   const { width: sw, height: sh } = screen.getPrimaryDisplay().workAreaSize;
+  const mainIcon = ICON_PATH;
 
   messagesWindow = new BrowserWindow({
     width:           480,
     height:          640,
+    icon:            mainIcon,
     x:               sw - 500,
     y:               sh - 680,
     resizable:       true,
@@ -368,9 +374,7 @@ function sendNotification(msg) {
   const notification = new Notification({
     title:   msg.headline,
     body:    msg.description.slice(0, 120) + (msg.description.length > 120 ? '…' : ''),
-    icon:    msg.image_url
-      ? path.join(__dirname, 'assets', 'tray-icon.png')
-      : path.join(__dirname, 'assets', 'tray-icon.png'),
+    icon:    ICON_PATH,
     silent:  false
   });
 
