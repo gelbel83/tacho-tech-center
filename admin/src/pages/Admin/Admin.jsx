@@ -1,4 +1,4 @@
-import { Router } from 'preact-router';
+import { Router, route } from 'preact-router';
 import Sidebar from './Sidebar/Sidebar.jsx';
 
 import ActiveView from './views/ActiveView/ActiveView.jsx';

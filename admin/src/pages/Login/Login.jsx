@@ -30,7 +30,6 @@ export default function Login() {
 
                 if (result.ok) {
                     setCurrentUser(data.user);
-                    route('/active');
                 } else {
                     setError(data.error);
                 }

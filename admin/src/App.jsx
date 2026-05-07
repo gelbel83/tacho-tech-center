@@ -21,9 +21,7 @@ export default function App() {
 
     return (
         <UserContext.Provider value={{ currentUser, setCurrentUser }}>
-            <SelectedFileContext.Provider value={{ selectedFile, setSelectedFile }}>
-                { !currentUser ? <Login /> : <Admin /> }
-            </SelectedFileContext.Provider>
+            { !currentUser ? <Login /> : <Admin /> }
         </UserContext.Provider>
     );
 }
