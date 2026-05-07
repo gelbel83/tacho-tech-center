@@ -2,12 +2,13 @@ import { useState } from 'preact/hooks';
 import { API } from '../../../api.js';
 
 import SidebarItem from './SidebarItem.jsx';
+import ExpandableSidebarItem from './ExpandableSidebarItem.jsx';
 import SidebarLogo from './SidebarLogo.jsx';
 import SidebarFooter from './Sidebarfooter.jsx';
 
 import '../../../styles/global.css';
 import './Sidebar.css';
-import ExpandableSidebarItem from './ExpandableSidebarItem.jsx';
+
 
 export default function Sidebar() {
     const activeIcon = <i className="fa-solid fa-circle-check"></i>;
@@ -22,7 +23,7 @@ export default function Sidebar() {
             <SidebarLogo />
 
             <ExpandableSidebarItem label={'Informator'} icon={inboxIcon} >
-                <SidebarItem label={'Aktywne'} icon={activeIcon} path={'/informator/aktywne'} badge={<span class="nav-badge">0</span>}/>
+                <SidebarItem label={'Aktywne'} icon={activeIcon} path={'/informator/aktywne'} badge={'0'}/>
                 <SidebarItem label={'Archiwum'} icon={archivedIcon} path={'/informator/archiwum'} />
                 <SidebarItem label={'Nowy komunikat'} icon={newMessageIcon} path={'/informator/nowy-komunikat'} />
             </ExpandableSidebarItem>

@@ -93,7 +93,7 @@ html, body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ─── FIELDS ───────────────────────────────────────────────── */
-.field-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; width: 100%; }
+.field-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; width: 100%; position: relative;}
 .field-radio-group {display: flex; flex-direction: row; gap: 6px; margin-bottom: 10px; width: 100%; }
 .field-label { font-size: 13px; font-weight: 600; color: var(--gray-700); }
 .required { color: var(--red); }

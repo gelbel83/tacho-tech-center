@@ -1,4 +1,4 @@
-import { Router } from 'preact-router';
+import { Router, useRouter } from 'preact-router';
 import Sidebar from './Sidebar/Sidebar.jsx';
 import Redirect from '../../components/Redirect.jsx';
 
@@ -9,11 +9,13 @@ import NewMessageView from './views/NewMessageView/NewMessageView.jsx';
 import SupportPanelView from './views/SupportPanelView/SupportPanelView.jsx';
 
 export default function Admin() {
-  return (
+    const [ router ] = useRouter();
+    
+    return (
     <>
         <Sidebar />
 
-        <Router>
+        <Router key={router.url}>
             <Redirect path="/" to="/informator/aktywne" />
             <Redirect path="/informator" to="/informator/aktywne" />
 
@@ -24,5 +26,5 @@ export default function Admin() {
             <SupportPanelView path="/support" />
         </Router>
     </>
-  );
+    );
 }

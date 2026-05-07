@@ -44,7 +44,7 @@ export default function ActiveView() {
                     <p className="view-sub">Lista komunikatów aktualnie prezentowanych klientom</p>
                 </div>
 
-                <button className="new-msg-shortcut btn btn-primary" onClick={() => route('/new-message')}>
+                <button className="new-msg-shortcut btn btn-primary" onClick={() => route('/informator/nowy-komunikat')}>
                     <i className="fa-solid fa-plus"></i>
                     <span>Nowy komunikat</span>
                 </button>
