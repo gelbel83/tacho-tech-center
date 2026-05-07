@@ -1,5 +1,6 @@
-import { Router, route } from 'preact-router';
+import { Router } from 'preact-router';
 import Sidebar from './Sidebar/Sidebar.jsx';
+import Redirect from '../../components/Redirect.jsx';
 
 import ActiveView from './views/ActiveView/ActiveView.jsx';
 import ArchivedView from './views/ArchivedView/ArchivedView.jsx';
@@ -13,11 +14,14 @@ export default function Admin() {
         <Sidebar />
 
         <Router>
-            <ActiveView path="/active" />
-            <ArchivedView path="/archived" />
-            <GenerateKeysView path="/generate-keys" />
+            <Redirect path="/" to="/informator/aktywne" />
+            <Redirect path="/informator" to="/informator/aktywne" />
+
+            <ActiveView path="/informator/aktywne" />
+            <ArchivedView path="/informator/archiwum" />
+            <NewMessageView path="/informator/nowy-komunikat" />
+            <GenerateKeysView path="/generator-kodow" />
             <SupportPanelView path="/support" />
-            <NewMessageView path="/new-message" />
         </Router>
     </>
   );

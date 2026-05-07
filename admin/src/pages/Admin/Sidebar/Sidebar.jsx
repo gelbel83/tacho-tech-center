@@ -22,12 +22,12 @@ export default function Sidebar() {
             <SidebarLogo />
 
             <ExpandableSidebarItem label={'Informator'} icon={inboxIcon} >
-                <SidebarItem label={'Aktywne'} icon={activeIcon} path={'/active'} badge={<span class="nav-badge">0</span>}/>
-                <SidebarItem label={'Archiwum'} icon={archivedIcon} path={'/archived'} />
-                <SidebarItem label={'Nowy komunikat'} icon={newMessageIcon} path={'/new-message'} />
+                <SidebarItem label={'Aktywne'} icon={activeIcon} path={'/informator/aktywne'} badge={<span class="nav-badge">0</span>}/>
+                <SidebarItem label={'Archiwum'} icon={archivedIcon} path={'/informator/archiwum'} />
+                <SidebarItem label={'Nowy komunikat'} icon={newMessageIcon} path={'/informator/nowy-komunikat'} />
             </ExpandableSidebarItem>
             
-            <SidebarItem label={'Generator kodów'} icon={generateKeysIcon} path={'/generate-keys'} />
+            <SidebarItem label={'Generator kodów'} icon={generateKeysIcon} path={'/generator-kodow'} />
             <SidebarItem label={'Panel supportu'} icon={supportPanelIcon} path={'/support'} />
 
             <SidebarFooter />
