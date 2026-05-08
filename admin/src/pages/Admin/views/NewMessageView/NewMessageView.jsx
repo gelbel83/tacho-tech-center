@@ -126,7 +126,6 @@ export default function NewMessageView() {
                                                 backgroundSize: 'cover',
                                                 backgroundPosition: 'center',
                                                 border: previewUrl ? 'none' : '2px dashed #ccc' 
-                    
                                             }}>
                                                 <input 
                                                     type="file" 
@@ -153,7 +152,7 @@ export default function NewMessageView() {
                                                         e.preventDefault();
                                                         e.stopPropagation();
                                                         setSelectedFile(null);
-                                                    }}
+                                                    }} 
                                                 >
                                                     ✕
                                                 </button>
