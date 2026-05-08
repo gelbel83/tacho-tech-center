@@ -1,12 +1,12 @@
 import '../../../../styles/global.css';
-import { useState, useContext } from 'preact/hooks';
+import { useState, useContext, useEffect } from 'preact/hooks';
 import { route } from 'preact-router';
-import { SelectedFileContext } from '../../../../context/SelectedFileContext.jsx';
 import { API, useAuth } from '../../../../api.js';
 
 export default function NewMessageView() {
-    const { selectedFile, setSelectedFile, clearUploadPreview } = useContext(SelectedFileContext);
-    
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
+
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({ type: null, msg: '' });
 
@@ -48,7 +48,7 @@ export default function NewMessageView() {
 
             setStatus({ 
                 type: 'success', 
-                msg: editingId ? 'Komunikat zaktualizowany.' : 'Komunikat opublikowany.' 
+                msg: editingId ? 'Komunikat zaktualizowany' : 'Komunikat opublikowany' 
             });
 
             setTimeout(() => route('/informator/aktywne'), 1200);
@@ -62,6 +62,18 @@ export default function NewMessageView() {
     const handleFrequencyChange = (e) => {
         setShowInterval(e.target.selectedIndex > 0);
     };
+
+    useEffect(() => {
+        if (!selectedFile) {
+            setPreviewUrl(null);
+            return;
+        }
+
+        const objectUrl = URL.createObjectURL(selectedFile);
+        setPreviewUrl(objectUrl);
+
+        return () => URL.revokeObjectURL(objectUrl);
+    }, [selectedFile]);
 
     return (
         <main className="view">
@@ -107,7 +119,15 @@ export default function NewMessageView() {
 
                                     {hasImage && (
                                         <div className="field-group">
-                                            <label className="upload-zone" style={{ cursor: 'pointer', display: 'block' }}>
+                                            <label className="upload-zone" style={{ 
+                                                cursor: 'pointer',
+                                                display: 'block',
+                                                backgroundImage: previewUrl ? `url(${previewUrl})` : 'none',
+                                                backgroundSize: 'cover',
+                                                backgroundPosition: 'center',
+                                                border: previewUrl ? 'none' : '2px dashed #ccc' 
+                    
+                                            }}>
                                                 <input 
                                                     type="file" 
                                                     style={{ display: 'none' }} 

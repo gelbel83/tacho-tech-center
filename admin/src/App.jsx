@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'preact/hooks';
 import { UserContext } from "./context/UserContext.jsx";
-import { SelectedFileContext } from './context/SelectedFileContext.jsx';
 
 import Login from './pages/Login/Login.jsx';
 import Admin from './pages/Admin/Admin.jsx';
@@ -22,10 +21,8 @@ export default function App() {
     }, [currentUser]);
 
     return (
-        <SelectedFileContext.Provider value={{ selectedFile, setSelectedFile, clearUploadPreview }}>
-            <UserContext.Provider value={{ currentUser, setCurrentUser }}>
-                { !currentUser ? <Login /> : <Admin /> }
-            </UserContext.Provider>
-        </SelectedFileContext.Provider>
+        <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+            { !currentUser ? <Login /> : <Admin /> }
+        </UserContext.Provider>
     );
 }
