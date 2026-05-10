@@ -33,6 +33,8 @@
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
   background: linear-gradient(135deg, #f0f0f0, #e8e8e8);
+  color: lightgray;
+  font-size: 200%;
 }
 .msg-thumb-placeholder svg { width: 28px; height: 28px; color: var(--gray-300); }
 
@@ -105,6 +107,7 @@
   cursor: pointer;
   flex-shrink: 0;
 }
+
 .toggle-status input { display: none; }
 .toggle-status-track {
   display: block;
@@ -124,4 +127,7 @@
   transition: transform var(--transition);
 }
 .toggle-status input:checked + .toggle-status-track { background: var(--red); }
+.toggle-status.expired-toggle {
+  visibility: hidden;
+}
 .toggle-status input:checked + .toggle-status-track::after { transform: translateX(18px); }
