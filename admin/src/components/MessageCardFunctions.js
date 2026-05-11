@@ -1,4 +1,7 @@
-export async function toggleMessage(id, { API, getAuthHeader, setMessages }) {
+import { API } from "../api";
+import { route } from "preact-router";
+
+export async function toggleMessage(id, getAuthHeader, setMessages) {
     try {
         const res = await fetch(`${API}/messages/${id}/toggle`, {
             method: 'PATCH',
@@ -24,17 +27,39 @@ export async function toggleMessage(id, { API, getAuthHeader, setMessages }) {
     }
 }
 
-export async function openEdit(id, { API, getAuthHeader, route, setMessages }) {
-  const res = await fetch(`${API}/messages/${id}`, {
-    headers: getAuthHeader()
-  });
+export let editingMessage;
 
-  const msg = await res.json();
-  setEditingMessage(msg);
-  route('/informator/nowy-komunikat');
+export async function openEditForm(id, getAuthHeader) {
+  try {
+    const res = await fetch(`${API}/messages/${id}`, { headers: getAuthHeader() });
+    const msg = await res.json();
+    if (!res.ok) throw new Error(msg.error);
+
+    editingMessage = msg;
+
+    route('/informator/nowy-komunikat');
+
+    // document.getElementById('form-view-title').textContent = 'Edytuj komunikat';
+    // document.getElementById('submit-label').textContent    = 'Zapisz zmiany';
+    // document.getElementById('edit-msg-id').value = id;
+
+    // document.getElementById('msg-headline').value    = msg.headline;
+    // document.getElementById('msg-description').value = msg.description;
+    // document.getElementById('msg-duration').value    = msg.display_duration_days;
+    // document.getElementById('msg-frequency').value   = msg.display_frequency;
+    // document.getElementById('msg-time').value        = msg.display_time;
+    // document.getElementById('msg-push').checked      = !!msg.show_push;
+    // document.getElementById('msg-active').checked    = !!msg.is_active;
+
+    // if (msg.image_url) {
+    //   showUploadPreview(`http://localhost:3000${msg.image_url}`);
+    // }
+  } catch (err) {
+    alert('Nie udało się załadować komunikatu: ' + err.message);
+  }
 }
 
-export async function deleteMessage(id, { API, getAuthHeader, setMessages }) {
+export async function deleteMessage(id, getAuthHeader, setMessages) {
   if (!confirm('Na pewno usunąć komunikat?')) return;
 
   try {

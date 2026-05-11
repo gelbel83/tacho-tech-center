@@ -4,7 +4,7 @@ import ListLoading from '../../../../components/ListLoading';
 import MessageCard from '../../../../components/MessageCard';
 import '../../../../styles/global.css';
 import { API, useAuth } from '../../../../api.js';
-import { toggleMessage, openEdit, deleteMessage } from '../../../../components/MessageCardFunctions.js';
+import { toggleMessage, deleteMessage, openEditForm } from '../../../../components/MessageCardFunctions.js';
 
 export default function ActiveView() {
     const [editingMessage, setEditingMessage] = useState(null);
@@ -66,13 +66,13 @@ export default function ActiveView() {
                 {!loading && !error && messages.map(msg => (
                     <MessageCard key={msg.id} image_url={msg.image_url} headline={msg.headline} display_frequency={msg.display_frequency} display_time={msg.display_time} expires={msg.expires_at} is_active={msg.is_active} id={msg.id}  
                     onToggle={(id) =>
-                        toggleMessage(id, { API, getAuthHeader, setMessages })
+                        toggleMessage(id, getAuthHeader, setMessages)
                     }
                     onEdit={(id) =>
-                        openEdit(id, { API, getAuthHeader, setEditingMessage, route })
+                        openEditForm(id, getAuthHeader)
                     }
                     onDelete={(id) =>
-                        deleteMessage(id, { API, getAuthHeader, setMessages })
+                        deleteMessage(id, getAuthHeader, setMessages)
                     }/>
                 ))}
             </div>
