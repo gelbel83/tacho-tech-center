@@ -267,7 +267,7 @@ function generateKey() {
 app.post('/api/keys/generate', requireAuth, (req, res) => {
   try {
     const { count } = req.body;
-
+    
     const inserted = [];
 
     const stmt = db.getDb().prepare(`
@@ -305,13 +305,20 @@ app.post('/api/keys/generate', requireAuth, (req, res) => {
   }
 });
 
-app.get('/api/keys', requireAuth, (req, res) => {
+app.post('/api/keys', requireAuth, (req, res) => {
+  const { page, limit } = req.body;
   try {
     const keys = db.getDb().prepare(`
-    SELECT id, status, secret_key
+    SELECT 
+      id, 
+      status, 
+      secret_key,
+      created_at,
+      ROW_NUMBER() OVER (ORDER BY status ASC, id DESC) AS row_num
     FROM keys
-    ORDER BY status ASC, id DESC;
-  `).all();
+    ORDER BY status ASC, id DESC
+    LIMIT ? OFFSET ?;
+  `).all(limit, (page - 1) * limit);
     res.json(keys);
   } catch (err) {
     console.error(err);
@@ -351,6 +358,32 @@ app.patch("/api/keys/:id", requireAuth, (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// ─── Keys tabs API ────────────────────────────────────────────────────────
+app.post('/api/keys/tabs', requireAuth, (req, res) => {
+  try {
+    const {currentTab, keysPerTab} = req.body;
+    const keysAmount = db.getDb().prepare(`
+      SELECT 
+        COUNT(*) AS count
+      FROM keys
+    `).get().count;
+    const maxForTab = Math.min(currentTab * keysPerTab, keysAmount);
+    const tabStart = keysPerTab * (currentTab - 1) + 1;
+    const numberOfTabs = Math.ceil(keysAmount / keysPerTab);
+
+    res.json({
+      keysAmount,
+      maxForTab,
+      tabStart,
+      numberOfTabs
+    });
+  }catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching keys' });
+  }
+});
+
 
 // ─── Keys overflow API ────────────────────────────────────────────────────
 app.get('/api/keys/overflow', requireAuth, (req, res) => {

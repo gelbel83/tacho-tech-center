@@ -41,9 +41,10 @@ function initSchema() {
     );
 
     CREATE TABLE IF NOT EXISTS keys ( 
-      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-      status VARCHAR(15) NOT NULL DEFAULT "Wygenerowany", 
-      secret_key VARCHAR(8) NOT NULL  
+      id INTEGER PRIMARY KEY AUTOINCREMENT not NULL, 
+      status varchar(15) not NULL DEFAULT "Wygenerowany", 
+      secret_key varchar(8) not NULL,
+      created_at DATETIME DEFAULT (datetime('now', 'localtime'))
     );
   `);
 
