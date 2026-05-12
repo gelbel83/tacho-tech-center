@@ -189,7 +189,7 @@ export default function NewMessageView() {
 
                                 {showInterval && (
                                     <div className="field-group">
-                                        <label className="field-label">Częstotliwość (HH:mm)</label>
+                                        <label className="field-label">Odstęp czasowy</label>
                                         <input type="time" name="display_interval" className="field-input" defaultValue="01:00" />
                                     </div>
                                 )}
