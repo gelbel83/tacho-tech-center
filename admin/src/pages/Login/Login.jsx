@@ -3,6 +3,8 @@ import { route } from 'preact-router';
 import { API } from '../../api.js';
 import { UserContext } from "../../context/UserContext.jsx";
 
+import logoNormal from '../../assets/logo-normal.png';
+
 import '../../styles/global.css';
 import './Login.css';
 
@@ -47,7 +49,7 @@ export default function Login() {
             <div className="login-wrapper">
                 <div className="login-card">
                     <div className="login-logo">
-                        <img className="logo" src="../../../logo/logo-normal.png" alt="logo" />
+                        <img className="logo" src={logoNormal} alt="logo" />
                     </div>
 
                     <h1 className="login-title">Panel Administracyjny</h1>

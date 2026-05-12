@@ -4,7 +4,7 @@ import { API } from '../../../api.js';
 import SidebarItem from './SidebarItem.jsx';
 import ExpandableSidebarItem from './ExpandableSidebarItem.jsx';
 import SidebarLogo from './SidebarLogo.jsx';
-import SidebarFooter from './Sidebarfooter.jsx';
+import SidebarFooter from './SidebarFooter.jsx';
 
 import '../../../styles/global.css';
 import './Sidebar.css';
