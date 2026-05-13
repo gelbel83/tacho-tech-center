@@ -69,8 +69,8 @@ npm install
 npm run dev
 ```
 
-Panel administracyjny dostępny pod: **http://localhost:3000**
-Po odpaleniu którejś z aplikacji `localhost:5173` i następna włączona aplikacja będzie mieć `localhost:5174`. 
+Panel administracyjny dostępny pod: **http://localhost:3000**.
+Po odpaleniu którejś z aplikacji **http://localhost:5173** i następna włączona aplikacja będzie mieć **http://localhost:5174**. 
 
 **Konta testowe (zaloguj się przez przeglądarkę):**
 - `admin@infolab.pl`
