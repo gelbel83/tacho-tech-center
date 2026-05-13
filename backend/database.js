@@ -49,10 +49,12 @@ function initSchema() {
 
     CREATE TABLE IF NOT EXISTS supportFiles (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      report_id INTEGER NOT NULL,
       created_by TEXT NOT NULL,
       created_by_email TEXT NOT NULL,
       description TEXT NOT NULL,
       file_path TEXT,
+      status TEXT NOT NULL DEFAULT 'Oczekujące',
       created_at DATETIME DEFAULT (datetime('now', 'localtime'))
     );
   `);

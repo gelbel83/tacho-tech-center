@@ -3,4 +3,8 @@ dist/
 backend/clientpulse.db
 backend/clientpulse.db-shm
 backend/clientpulse.db-wal
+<<<<<<< HEAD
 uploads/
+=======
+backend/uploads/
+>>>>>>> ceee71529cdb917a8cee332f5418d0d6970b910c
