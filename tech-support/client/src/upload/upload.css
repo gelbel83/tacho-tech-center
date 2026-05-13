@@ -14,10 +14,8 @@ body { display: flex; flex-direction: column; }
   top: 0;
   z-index: 100;
 }
-.logo {
-  width: 36px; height: 36px;
-  background: var(--red);
-  border-radius: 8px;
+.logo > img {
+  height: 50px;
   display: flex; align-items: center; justify-content: center;
 }
 .logo svg { width: 20px; height: 20px; }

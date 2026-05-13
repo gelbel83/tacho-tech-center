@@ -46,6 +46,15 @@ function initSchema() {
       secret_key varchar(8) not NULL,
       created_at DATETIME DEFAULT (datetime('now', 'localtime'))
     );
+
+    CREATE TABLE IF NOT EXISTS supportFiles (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      created_by TEXT NOT NULL,
+      created_by_email TEXT NOT NULL,
+      description TEXT NOT NULL,
+      file_path TEXT,
+      created_at DATETIME DEFAULT (datetime('now', 'localtime'))
+    );
   `);
 
   // Seed: Predefiniowane domeny / użytkownicy firmowi

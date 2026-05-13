@@ -43,6 +43,11 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 } // 5MB
 });
 
+const supportUpload = multer({
+  storage,
+  limits: { fileSize: 20 * 1024 * 1024 } // 20MB
+});
+
 // ─── Middleware ────────────────────────────────────────────────────────────
 app.use(cors());
 app.use(express.json());
@@ -451,4 +456,47 @@ app.listen(PORT, () => {
 //   console.log(`   Panel Admin:  http://localhost:${PORT}/`);
   console.log(`   Dozwolona domena: ${ALLOWED_DOMAIN}`);
   console.log(`   Produkt:      Info Tachospeed\n`);
+});
+
+// ─── Support Center ───────────────────────────────────────────────────────
+app.post(
+  '/api/support/upload',
+  supportUpload.array('files'),
+  (req, res) => {
+    try {
+      const { name, email, description } = req.body;
+      const files = req.files;
+
+      if (!files || files.length === 0) {
+        return res.status(400).json({
+          error: 'No files uploaded'
+        });
+      }
+
+      const stmt = db.getDb().prepare(`
+        INSERT INTO supportFiles
+        (created_by, created_by_email, description, file_path)
+        VALUES (?, ?, ?, ?)
+      `);
+
+      for (const file of files) {
+        stmt.run(
+          name,
+          email,
+          req.body.description,
+          `/uploads/${file.filename}`
+        );
+      }
+
+      res.status(201).json({
+        success: true,
+        uploaded: files.length
+      });
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        error: 'Error sending files'
+      });
+    }
 });

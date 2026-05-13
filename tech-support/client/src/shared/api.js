@@ -1,3 +1,15 @@
+import { useContext } from 'preact/hooks';
+
+export const API = 'http://localhost:3000/api';
+
+export function useAuth(userEmail) {
+  const getAuthHeader = () => {
+    return { 'Authorization': 'Bearer ' + btoa(userEmail) };
+  };
+
+  return { getAuthHeader };
+}
+
 const BASE = '';
 
 async function req(path, opts = {}, adminToken = null) {

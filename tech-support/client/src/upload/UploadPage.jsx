@@ -1,7 +1,7 @@
 import { useSignal, useComputed } from '@preact/signals';
 import { DropZone } from './DropZone';
 import { FileList } from './FileList';
-import { initUpload, completeUpload, uploadToS3 } from '../shared/api';
+import { initUpload, completeUpload, uploadToS3, API, useAuth } from '../shared/api';
 import './upload.css';
 
 const MAX_RETRIES = 3;
@@ -53,7 +53,6 @@ export function UploadPage() {
     const name        = e.target.name.value.trim();
     const email       = e.target.email.value.trim();
     const description = e.target.description.value.trim();
-
     nameError.value  = !name;
     emailError.value = !EMAIL_RE.test(email);
 
@@ -64,38 +63,32 @@ export function UploadPage() {
     }
 
     loading.value = true;
-    progress.value = {};
+
+    const { getAuthHeader } = useAuth(email);
 
     try {
-      const { uploadId, presignedFiles } = await initUpload({
-        clientName: name,
-        email,
-        description,
-        idempotencyKey: crypto.randomUUID(),
-        files: files.value.map(f => ({
-          name:     f.name,
-          size:     f.size,
-          mimeType: f.type || 'application/octet-stream',
-        })),
+      const formData = new FormData();
+
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('description', description);
+
+      files.value.forEach(file => {
+          formData.append('files', file);
       });
 
-      const fileResults = await Promise.all(
-        presignedFiles.map(async ({ fileId, presignedUrl, fileName }, idx) => {
-          const fileObj = files.value.find(f => f.name === fileName) ?? files.value[idx];
-          try {
-            await retryUpload(presignedUrl, fileObj, (pct) => setProgress(idx, pct));
-            return { fileId, status: 'completed' };
-          } catch (err) {
-            return { fileId, status: 'failed', errorMsg: err.message };
-          }
-        })
-      );
+       const res = await fetch(`${API}/support/upload`, {
+            method: 'POST',
+            body: formData
+        });
 
-      await completeUpload({ uploadId, fileResults });
-      success.value = true;
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Błąd serwera');
     } catch (err) {
-      error.value = err.message || 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.';
-      loading.value = false;
+        error.value = { type: 'error', msg: err.message };
+    } finally {
+        loading.value = false;
     }
   }
 
@@ -113,11 +106,8 @@ export function UploadPage() {
     <>
       <header class="header">
         <div class="logo">
-          <svg viewBox="0 0 24 24" fill="white">
-            <path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
-          </svg>
+            <img src="src\assets\logo-normal.png" alt="logo" />
         </div>
-        <div class="brand">Support<span>Upload</span></div>
       </header>
 
       <main class="main">
