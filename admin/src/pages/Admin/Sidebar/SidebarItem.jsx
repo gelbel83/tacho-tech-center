@@ -2,14 +2,16 @@ import clsx from 'clsx';
 import { route, useRouter } from 'preact-router';
 
 export default function SidebarItem({ label, icon, path, badge }) {
-    const [router] = useRouter();
+    const [{ url }] = useRouter();
 
-    const currentPathBase = router.url.split('?')[0];
-    const isActive = currentPathBase === path;
+    const currentPathBase = url.split('?')[0];
+    const itemPathBase = path.split('?')[0];
+
+    const isActive = currentPathBase === itemPathBase;
 
     const handleClick = (e) => {
         e.preventDefault();
-        if (isActive) return;
+        if (url === path) return;
 
         route(path);
     };

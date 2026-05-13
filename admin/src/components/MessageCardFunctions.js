@@ -14,9 +14,7 @@ export async function toggleMessage(id, getAuthHeader, setMessages) {
         
         setMessages(prev =>
             prev.map(msg =>
-                msg.id === id
-                    ? { ...msg, is_active: !msg.is_active }
-                    : msg
+                msg.id === id ? { ...msg, is_active: !msg.is_active } : msg
             )
         );
 
@@ -27,36 +25,8 @@ export async function toggleMessage(id, getAuthHeader, setMessages) {
     }
 }
 
-export let editingMessage;
-
-export async function openEditForm(id, getAuthHeader) {
-  try {
-    const res = await fetch(`${API}/messages/${id}`, { headers: getAuthHeader() });
-    const msg = await res.json();
-    if (!res.ok) throw new Error(msg.error);
-
-    editingMessage = msg;
-
-    route('/informator/nowy-komunikat');
-
-    // document.getElementById('form-view-title').textContent = 'Edytuj komunikat';
-    // document.getElementById('submit-label').textContent    = 'Zapisz zmiany';
-    // document.getElementById('edit-msg-id').value = id;
-
-    // document.getElementById('msg-headline').value    = msg.headline;
-    // document.getElementById('msg-description').value = msg.description;
-    // document.getElementById('msg-duration').value    = msg.display_duration_days;
-    // document.getElementById('msg-frequency').value   = msg.display_frequency;
-    // document.getElementById('msg-time').value        = msg.display_time;
-    // document.getElementById('msg-push').checked      = !!msg.show_push;
-    // document.getElementById('msg-active').checked    = !!msg.is_active;
-
-    // if (msg.image_url) {
-    //   showUploadPreview(`http://localhost:3000${msg.image_url}`);
-    // }
-  } catch (err) {
-    alert('Nie udało się załadować komunikatu: ' + err.message);
-  }
+export async function openEditForm(id) {
+    route(`/informator/edytuj-komunikat?id=${id}`);
 }
 
 export async function deleteMessage(id, getAuthHeader, setMessages) {

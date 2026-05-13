@@ -5,7 +5,7 @@ import Redirect from '../../components/Redirect.jsx';
 import ActiveView from './views/ActiveView/ActiveView.jsx';
 import ArchivedView from './views/ArchivedView/ArchivedView.jsx';
 import GenerateKeysView from './views/GenerateKeysView/GenerateKeysView.jsx';
-import NewMessageView from './views/NewMessageView/NewMessageView.jsx';
+import MessageFormView from './views/MessageFormView/MessageFormView.jsx';
 import SupportPanelView from './views/SupportPanelView/SupportPanelView.jsx';
 
 export default function Admin() {
@@ -18,10 +18,13 @@ export default function Admin() {
         <Router key={router.url}>
             <Redirect path="/" to="/informator/aktywne" />
             <Redirect path="/informator" to="/informator/aktywne" />
+            <Redirect path="" to="" />
 
             <ActiveView path="/informator/aktywne" />
             <ArchivedView path="/informator/archiwum" />
-            <NewMessageView path="/informator/nowy-komunikat" />
+            <MessageFormView path="/informator/nowy-komunikat" />
+            <MessageFormView path="/informator/edytuj-komunikat" />
+
             <GenerateKeysView path="/generator-kodow" />
             <SupportPanelView path="/support" />
         </Router>

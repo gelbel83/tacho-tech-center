@@ -3,3 +3,4 @@ dist/
 backend/clientpulse.db
 backend/clientpulse.db-shm
 backend/clientpulse.db-wal
+uploads/
