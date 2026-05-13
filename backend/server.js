@@ -473,18 +473,24 @@ app.post(
         });
       }
 
+      const nextId = db.getDb().prepare(`
+        SELECT COALESCE(MAX(report_id), 0) + 1 AS id
+        FROM supportFiles
+      `).get().id;
+
       const stmt = db.getDb().prepare(`
         INSERT INTO supportFiles
-        (created_by, created_by_email, description, file_path)
-        VALUES (?, ?, ?, ?)
+        (report_id, created_by, created_by_email, description, file_path)
+        VALUES (?, ?, ?, ?, ?)
       `);
 
       for (const file of files) {
         stmt.run(
+          nextId,
           name,
           email,
           req.body.description,
-          `/uploads/${file.filename}`
+          `/uploads/${file.originalname}`
         );
       }
 
@@ -499,4 +505,30 @@ app.post(
         error: 'Error sending files'
       });
     }
+});
+
+app.get('/api/support/uploads', requireAuth, (req, res) => {
+  try {
+    const files = db.getDb().prepare(`
+    SELECT 
+      id, 
+      report_id,
+      created_by, 
+      created_by_email,
+      description,
+      file_path,
+      status,
+      created_at
+    FROM supportFiles;
+  `).all();
+    res.json(files);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching files' });
+  }
+});
+
+app.get('/download/:filename', (req, res) => {
+    const file = path.join(__dirname, 'uploads', req.params.filename);
+    res.download(file);
 });
