@@ -32,8 +32,6 @@ export default function MessageFormView() {
     useEffect(() => {
         if (!isEditMode) return;
 
-        
-
         const fetchMessageData = async () => {
             setLoading(true);
             try {
