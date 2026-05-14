@@ -213,25 +213,72 @@ export default function ReportListCard() {
                             {openReports[r.report_id] && (
                                 <tr className="report-expanded-row">
                                     <td colSpan="5">
-                                        <div className='expandedContent'>
-                                            <div className='description'>
-                                            {r.description || "Brak opisu"}
+                                        <div className='expandedContent'
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                gap: '20px',
+                                                padding: '12px 0',
+                                                width: '100%'
+                                            }}>
+                                        <div className='description'
+                                                style={{
+                                                    flex: 1,
+                                                    textAlign: 'left',
+                                                    wordBreak: 'break-word',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    minHeight: '40px'
+                                                }}>
+                                                {r.description || "Brak opisu"}
                                             </div>
-                                            <div>
-                                                <ul>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '16px',
+                                                    flexShrink: 0
+                                                }}>
+                                                <ul
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '10px',
+                                                        listStyle: 'none',
+                                                        margin: 0,
+                                                        marginRight: '100px',
+                                                        padding: 0
+                                                    }}
+                                                >
                                                     {r.files.map((f, i) => (
                                                         <li className='fileDownload' key={i}>
-                                                            <a href={`http://localhost:3000/download/${encodeURIComponent(f.split('/').pop())}`}>
+                                                            <a
+                                                                href={`http://localhost:3000/download/${encodeURIComponent(f.split('/').pop())}`}
+                                                                style={{
+                                                                    textDecoration: 'none',
+                                                                    color: '#4da3ff',
+                                                                    fontWeight: '500',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    height: '40px'
+                                                                }}
+                                                            >
                                                                 {f.split('/').pop()}
                                                             </a>
                                                         </li>
                                                     ))}
                                                 </ul>
-                                            </div>
-                                            <div className='downloadBtnBox'>
+
                                                 <button
                                                     className="downloadAllBtn"
                                                     onClick={() => downloadZip(r)}
+                                                    style={{
+                                                        height: '40px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        marginRight: '80px'
+                                                    }}
                                                 >
                                                     Pobierz wszystkie
                                                 </button>
