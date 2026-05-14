@@ -85,10 +85,11 @@ export function UploadPage() {
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.error || 'Błąd serwera');
+      success.value = true;
     } catch (err) {
         error.value = { type: 'error', msg: err.message };
     } finally {
-        loading.value = false;
+        e.target.description.value = '';
     }
   }
 
@@ -97,9 +98,9 @@ export function UploadPage() {
     progress.value = {};
     error.value    = '';
     loading.value  = false;
-    success.value  = false;
     nameError.value  = false;
     emailError.value = false;
+    success.value = false;
   }
 
   return (

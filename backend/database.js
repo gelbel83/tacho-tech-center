@@ -54,7 +54,7 @@ function initSchema() {
       created_by_email TEXT NOT NULL,
       description TEXT NOT NULL,
       file_path TEXT,
-      status TEXT NOT NULL DEFAULT 'Oczekujące',
+      status TEXT NOT NULL DEFAULT 'Nowe',
       created_at DATETIME DEFAULT (datetime('now', 'localtime'))
     );
   `);

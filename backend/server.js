@@ -31,6 +31,40 @@ const storage = multer.diskStorage({
   }
 });
 
+const supportStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, 'uploads');
+
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    cb(null, uploadDir);
+  },
+
+  filename: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, 'uploads');
+
+    const safeName = file.originalname.replace(
+      /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ._ -]/g,
+      '_'
+    );
+
+    const ext = path.extname(safeName);
+    const baseName = path.basename(safeName, ext);
+
+    let finalName = safeName;
+    let counter = 1;
+
+    while (fs.existsSync(path.join(uploadDir, finalName))) {
+      finalName = `${baseName} (${counter})${ext}`;
+      counter++;
+    }
+
+    cb(null, finalName);
+  }
+});
+
 const fileFilter = (req, file, cb) => {
   const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
   if (allowed.includes(file.mimetype)) cb(null, true);
@@ -44,7 +78,7 @@ const upload = multer({
 });
 
 const supportUpload = multer({
-  storage,
+  storage: supportStorage,
   limits: { fileSize: 20 * 1024 * 1024 } // 20MB
 });
 
@@ -490,7 +524,7 @@ app.post(
           name,
           email,
           req.body.description,
-          `/uploads/${file.originalname}`
+          `/uploads/${file.filename}`
         );
       }
 
@@ -531,4 +565,72 @@ app.get('/api/support/uploads', requireAuth, (req, res) => {
 app.get('/download/:filename', (req, res) => {
     const file = path.join(__dirname, 'uploads', req.params.filename);
     res.download(file);
+});
+
+app.patch('/api/support/reports/:reportId/read', (req, res) => {
+    const reportId = req.params.reportId;
+
+    const stmt = db.getDb().prepare(`
+        UPDATE supportFiles
+        SET status = 'Odczytane'
+        WHERE report_id = ?
+    `);
+
+    stmt.run(reportId);
+
+    res.sendStatus(200);
+});
+
+app.get('/api/support/uploadCount', requireAuth, (req, res) => {
+  try {
+    const files = db.getDb().prepare(`
+    SELECT 
+      count(DISTINCT report_id) AS total,
+      count(DISTINCT CASE WHEN status = 'Odczytane' THEN report_id END) AS read,
+      count(DISTINCT CASE WHEN status != 'Odczytane' THEN report_id END) AS new
+    FROM supportFiles;
+  `).get();
+    res.json(files);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching files' });
+  }
+});
+
+app.delete('/api/support/reports/:id', requireAuth, (req, res) => {
+  try {
+    const reportId = req.params.id;
+
+    const database = db.getDb();
+
+    const files = database.prepare(`
+      SELECT file_path FROM supportFiles WHERE report_id = ?
+    `).all(reportId);
+
+    database.prepare(`
+      DELETE FROM supportFiles WHERE report_id = ?
+    `).run(reportId);
+
+    const fs = require('fs');
+    const path = require('path');
+
+    const uploadsDir = path.join(__dirname, '..', 'uploads');
+
+    for (const f of files) {
+        if (!f.file_path) continue;
+
+        const fullPath = path.join(__dirname, f.file_path);
+
+        try {
+            fs.unlinkSync(fullPath);
+        } catch (e) {
+            console.warn("File not found:", fullPath);
+        }
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to delete report' });
+  }
 });
