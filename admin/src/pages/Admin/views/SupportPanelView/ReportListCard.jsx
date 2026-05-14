@@ -3,6 +3,8 @@ import '../../../../styles/global.css';
 import ListLoading from '../../../../components/ListLoading';
 import { API, useAuth } from '../../../../api.js';
 import { useMemo } from 'preact/hooks';
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 export default function ReportListCard() {
     const [files, setFiles] = useState([]);
