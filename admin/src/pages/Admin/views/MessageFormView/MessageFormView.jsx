@@ -27,6 +27,7 @@ export default function MessageFormView() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [hasImage, setHasImage] = useState(false);
+    const [removeImage, setRemoveImage] = useState(false);
     const [showInterval, setShowInterval] = useState(false);
 
     useEffect(() => {
@@ -60,6 +61,13 @@ export default function MessageFormView() {
                     setHasImage(true);
                     
                     const serverBase = API.replace('/api', ''); 
+                    setPreviewUrl(`${serverBase}${data.image_url}`);
+                }
+
+                if (data.image_url) {
+                    setHasImage(true);
+                    setRemoveImage(false);
+                    const serverBase = API.replace('/api', '');
                     setPreviewUrl(`${serverBase}${data.image_url}`);
                 }
                 
@@ -113,9 +121,11 @@ export default function MessageFormView() {
                 submissionData.append(key, formData[key]);
             });
 
-            if (hasImage && selectedFile) {
+            if (selectedFile) {
                 submissionData.append('image', selectedFile);
-            } else if (!hasImage && isEditMode) {
+            }
+
+            if (removeImage && isEditMode) {
                 submissionData.append('remove_image', 'true');
             }
 
@@ -189,32 +199,41 @@ export default function MessageFormView() {
                                 <div style="margin-bottom:10px;">
                                     <label>
                                         <input 
-                                            type="checkbox" 
-                                            checked={hasImage} 
-                                            onChange={(e) => {
-                                                const checked = e.target.checked;
-                                                setHasImage(checked);
-                                                if (!checked) {
-                                                    setSelectedFile(null);
-                                                    setPreviewUrl(null); 
-                                                }
-                                            }}
-                                        /> Dodaj zdjęcie
+                                        type="checkbox" 
+                                        checked={hasImage} 
+                                        onChange={(e) => {
+                                            const checked = e.target.checked;
+
+                                            setHasImage(checked);
+
+                                            if (!checked) {
+                                                setSelectedFile(null);
+                                                setPreviewUrl(null);
+                                                setRemoveImage(true);
+                                            } else {
+                                                setRemoveImage(false);
+                                            }
+                                        }}
+                                    /> Dodaj zdjęcie
                                     </label>
                                 </div>
 
                                 {hasImage && (
                                     <div className="field-group">
-                                        <label className="upload-zone" style={{ 
-                                            backgroundImage: previewUrl ? `url(${previewUrl})` : 'none',
-                                            border: previewUrl ? 'none' : '2px dashed #ccc' 
-                                        }}>
-                                            <input 
-                                                type="file" 
-                                                style={{ display: 'none' }} 
+                                        <label
+                                            className="upload-zone"
+                                            style={{
+                                                backgroundImage: previewUrl ? `url(${previewUrl})` : 'none',
+                                                backgroundSize: 'cover', 
+                                                backgroundPosition: 'center',
+                                                backgroundRepeat: 'no-repeat',
+                                                border: previewUrl ? 'none' : '2px dashed #ccc'
+                                            }}>
+                                            <input
+                                                type="file"
+                                                style={{ display: 'none' }}
                                                 onChange={(e) => setSelectedFile(e.target.files[0])}
-                                                accept="image/*" 
-                                            />
+                                                accept="image/*"/>
                                             {!previewUrl && (
                                                 <div className="upload-placeholder">
                                                     <i className="fa-regular fa-image fa-2x"></i>

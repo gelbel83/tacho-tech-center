@@ -188,40 +188,68 @@ app.put('/api/messages/:id', requireAuth, upload.single('image'), (req, res) => 
   try {
     const id = Number(req.params.id);
     const existing = db.getMessageById(id);
+
     if (!existing) {
       if (req.file) fs.unlinkSync(req.file.path);
       return res.status(404).json({ error: 'Nie znaleziono komunikatu' });
     }
 
+    const {
+      headline,
+      description,
+      display_duration_days,
+      display_frequency,
+      display_time,
+      show_push,
+      is_active
+    } = req.body;
+
     let image_url = existing.image_url;
-    if (req.file) {
-      // Usuń starą grafikę jeśli istnieje
+
+    const removeImage = req.body.remove_image === 'true';
+
+    if (removeImage) {
       if (existing.image_url) {
         const oldPath = path.join(__dirname, existing.image_url);
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        if (fs.existsSync(oldPath)) {
+          fs.unlinkSync(oldPath);
+        }
       }
+      image_url = null;
+    }
+
+    if (req.file) {
+      if (existing.image_url) {
+        const oldPath = path.join(__dirname, existing.image_url);
+        if (fs.existsSync(oldPath)) {
+          fs.unlinkSync(oldPath);
+        }
+      }
+
       image_url = `/uploads/${req.file.filename}`;
     }
 
-    const { headline, description, display_duration_days, display_frequency,
-            display_time, show_push, is_active } = req.body;
-
     const updated = db.updateMessage(id, {
-      headline, description, image_url,
-      display_duration_days: display_duration_days ? Number(display_duration_days) : undefined,
-      display_frequency, display_time,
+      headline,
+      description,
+      image_url,
+      display_duration_days: display_duration_days
+        ? Number(display_duration_days)
+        : undefined,
+      display_frequency,
+      display_time,
       show_push: show_push !== undefined ? show_push !== 'false' : undefined,
       is_active: is_active !== undefined ? is_active !== 'false' : undefined
     });
 
     notifyClients('messages_updated');
+
     res.json(updated);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Błąd podczas edycji komunikatu' });
   }
 });
-
 app.patch('/api/messages/:id/toggle', requireAuth, (req, res) => {
   try {
     const msg = db.toggleMessage(Number(req.params.id));
@@ -239,7 +267,6 @@ app.delete('/api/messages/:id', requireAuth, (req, res) => {
     const msg = db.getMessageById(id);
     if (!msg) return res.status(404).json({ error: 'Nie znaleziono komunikatu' });
 
-    // Usuń plik grafiki jeśli istnieje
     if (msg.image_url) {
       const filePath = path.join(__dirname, msg.image_url);
       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
@@ -532,3 +559,4 @@ app.get('/download/:filename', (req, res) => {
     const file = path.join(__dirname, 'uploads', req.params.filename);
     res.download(file);
 });
+
