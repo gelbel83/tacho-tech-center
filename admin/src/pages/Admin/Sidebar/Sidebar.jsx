@@ -53,6 +53,11 @@ export default function Sidebar() {
 
             <ExpandableSidebarItem label={'Informator'} icon={inboxIcon} >
                 <SidebarItem 
+                    label={messageFormLabel} 
+                    icon={messageFormIcon} 
+                    path={messageFormPath} 
+                />
+                <SidebarItem 
                     label={'Aktywne'} 
                     icon={activeIcon} 
                     path={'/informator/aktywne'} 
@@ -62,11 +67,6 @@ export default function Sidebar() {
                     label={'Archiwum'} 
                     icon={archivedIcon} 
                     path={'/informator/archiwum'} 
-                />
-                <SidebarItem 
-                    label={messageFormLabel} 
-                    icon={messageFormIcon} 
-                    path={messageFormPath} 
                 />
             </ExpandableSidebarItem>
             
