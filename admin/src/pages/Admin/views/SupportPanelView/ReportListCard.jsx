@@ -15,8 +15,9 @@ export default function ReportListCard() {
 
     useEffect(() => {
         async function loadFiles() {
+            setLoading(true);
             try {
-                const res = await fetch(`${API}/support/uploads`, {
+                const res = await fetch(`${API}/support/uploads?search=${encodeURIComponent(search)}`, {
                     headers: getAuthHeader() 
                 });
 
@@ -29,8 +30,12 @@ export default function ReportListCard() {
             }
         }
 
-        loadFiles();
-    }, []);
+        const delayDebounce = setTimeout(() => {
+            loadFiles();
+        }, 300); 
+
+        return () => clearTimeout(delayDebounce);
+    }, [search]);
 
     const groupedFiles = useMemo(() => {
     const grouped = files.reduce((acc, file) => {
