@@ -594,7 +594,6 @@ app.get('/download/:filename', (req, res) => {
     res.download(file);
 });
 
-<<<<<<< HEAD
 app.patch('/api/support/reports/:reportId/read', (req, res) => {
     const reportId = req.params.reportId;
 
@@ -662,5 +661,3 @@ app.delete('/api/support/reports/:id', requireAuth, (req, res) => {
     res.status(500).json({ error: 'Failed to delete report' });
   }
 });
-=======
->>>>>>> e8dd2e62f631fab17663a4a8b293f5cd26f682a5

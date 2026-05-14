@@ -3,12 +3,15 @@ import '../../../../styles/global.css';
 import ListLoading from '../../../../components/ListLoading';
 import { API, useAuth } from '../../../../api.js';
 import { useMemo } from 'preact/hooks';
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 export default function ReportListCard() {
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(true);
     const { getAuthHeader } = useAuth();
     const [openReports, setOpenReports] = useState({});
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         async function loadFiles() {
@@ -43,11 +46,21 @@ export default function ReportListCard() {
             };
         }
 
-            acc[file.report_id].files.push(file.file_path);
-            return acc;
-        }, {});
+        acc[file.report_id].files.push(file.file_path);
+        return acc;
+    }, {});
 
-        return Object.values(grouped).sort((a, b) => {
+    return Object.values(grouped)
+        .filter(r => {
+            const q = search.toLowerCase();
+
+            return (
+                r.created_by?.toLowerCase().includes(q) ||
+                r.created_by_email?.toLowerCase().includes(q) ||
+                r.description?.toLowerCase().includes(q)
+            );
+        })
+        .sort((a, b) => {
             const aIsNew = a.status !== 'Odczytane';
             const bIsNew = b.status !== 'Odczytane';
 
@@ -57,7 +70,7 @@ export default function ReportListCard() {
 
             return new Date(b.created_at) - new Date(a.created_at);
         });
-    }, [files]);
+}, [files, search]);
 
     async function toggle(reportId) {
         const isOpening = !openReports[reportId];
@@ -113,6 +126,22 @@ export default function ReportListCard() {
         }
     }
 
+    async function downloadZip(report) {
+        const zip = new JSZip();
+
+        for (const filePath of report.files) {
+            const fileName = filePath.split("/").pop();
+
+            const res = await fetch(`${API}/download/${encodeURIComponent(fileName)}`);
+            const blob = await res.blob();
+
+            zip.file(fileName, blob);
+        }
+
+        const content = await zip.generateAsync({ type: "blob" });
+        saveAs(content, `report-${report.created_by}.zip`);
+    }
+
     return (
         <div className="report-list-card">
             <div className="report-list-header">
@@ -121,6 +150,8 @@ export default function ReportListCard() {
                     type="text"
                     placeholder="Szukaj (imię, email...)"
                     className="report-search"
+                    value={search}
+                    onInput={(e) => setSearch(e.target.value)}
                 />
             </div>
 
@@ -193,8 +224,11 @@ export default function ReportListCard() {
                                                 </ul>
                                             </div>
                                             <div className='downloadBtnBox'>
-                                                <button className='downloadAllBtn'>
-                                                    Pobierz wszyzstkie
+                                                <button
+                                                    className="downloadAllBtn"
+                                                    onClick={() => downloadZip(r)}
+                                                >
+                                                    Pobierz wszystkie
                                                 </button>
                                             </div>
                                         </div>
